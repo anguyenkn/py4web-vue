@@ -1,0 +1,56 @@
+[[extend 'layout.html']]
+
+<section class="section">
+  <div class="title">Your Address Book</div>
+    <!-- Complete -->
+    <table class='table is-fullwidth is-striped'>
+      <!-- Row 1, headers -->
+      <tr>
+        <th>
+          First Name
+        </th>
+        <th>
+          Last Name
+        </th>
+        <th></th> <!-- Spacer -->
+        <th>
+          Phone Numbers
+        </th>
+      </tr>
+      <!--- Data rows -->
+      [[for row in contact_list:  ]]
+            <tr>
+              <!--Columb 1-->
+              <td>
+                [[=row.first_name]]
+              </td>
+              <!--Columb 2-->
+              <td>
+                [[=row.last_name]]
+              </td>
+              <!--edit/delete Buttons-->
+              <td>
+                <a class='button is-warning', href="[[=URL('edit_contact', row.id)]]">
+                  <i class="fa fa-fw fa-pencil"></i>
+                </a>
+                <a class='button is-danger', href="[[=URL('delete_contact', row.id, signer=signer)]]">
+                  <i class="fa fa-fw fa-trash"></i>
+                </a>
+              </td>
+              <td>
+                <p>
+                  [[ = row.phone_numbers ]]
+                </p>
+              </td>
+              <td>
+                <a class='button is-warning', href="[[=URL('edit_phone', row.id)]]">
+                  <i class="fa fa-fw fa-pencil"></i>
+                </a>
+              </td>
+            </tr>
+      [[pass]]
+
+    </table> 
+    <!--Add Contact Button-->
+    <a class="button is-primary" href="[[=URL('add_contact')]]">Add Contact</a>
+</section>

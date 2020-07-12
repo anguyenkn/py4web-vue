@@ -1,0 +1,18 @@
+[[extend 'layout.html']]
+
+<section class="section">
+  <div class="title">Welcome!  Who are you?</div>
+  <form method="POST" action="[[=URL('index')]]" enctype="multipart/form-data">
+      <div class="field">
+          <label for="username" class="label">Your Name:</label>
+          <div class="control">
+              <input type="text" id="input_username" name="username" class="input">
+          </div>
+      </div>
+      <div class="field">
+          <div class="control">
+              <input type="submit" value="Submit" class="button">
+          </div>
+      </div>
+  </form>
+</section>

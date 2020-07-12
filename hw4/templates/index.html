@@ -1,0 +1,31 @@
+[[extend 'layout.html']]
+
+<section class="section">
+  <div class="title">Your Address Book</div>
+    <table class="table is-striped is-fullwidth">
+      <tbody>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th></th>
+          <th>Phone Numbers</th>
+          <th></th>
+        </tr>
+        [[for person in persons:]]
+        <tr>
+          <td>[[=person.first_name]]</td>
+          <td>[[=person.last_name]]</td>
+          <td>
+            <a class="button is-warning" href="[[=URL('edit_contact', person.id)]]"><i class="fa fa-fw fa-edit"></i></a>
+            <a class="button is-danger" href="[[=URL('delete_contact', person.id, signer=url_signer)]]"><i class="fa fa-fw fa-trash"></i></a>
+          </td>
+          <td>[[=person.phone_numbers]]</td>
+          <td>
+            <a href="[[=URL('edit_phones', person.id)]]" class="button is-warning"><i class="fa fa-fw fa-edit"></i></a>
+          </td>
+        </tr>
+        [[pass]]
+      </tbody>
+    </table>
+    <a href="[[=URL('add_contact')]]" class="button is-primary">Add Contact</a>
+</section>

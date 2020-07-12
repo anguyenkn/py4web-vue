@@ -1,0 +1,20 @@
+<!-- TODO: complete -->
+<span class="has-text-info">
+
+    <span v-on:click="set_thumbs(1)">
+
+        <i v-if="thumb_rating == 1" class="fa fa-flip-horizontal fa-thumbs-up"></i>
+        <i v-if="thumb_rating == null || thumb_rating == 0" class="fa fa-flip-horizontal fa-thumbs-o-up"></i>
+        <i v-if="thumb_rating == -1" class="fa fa-flip-horizontal fa-thumbs-o-up"></i>
+
+
+    </span>
+    <span v-on:click="set_thumbs(-1)">
+
+        <i v-if="thumb_rating == -1" class="fa fa-thumbs-down"></i>
+        <i v-if="thumb_rating == null || thumb_rating == 0" class="fa fa-thumbs-o-down"></i>
+        <i v-if="thumb_rating == 1" class="fa fa-thumbs-o-down"></i>
+
+    </span>
+
+</span>

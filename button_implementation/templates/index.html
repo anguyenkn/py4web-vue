@@ -1,0 +1,57 @@
+[[extend 'layout.html']]
+
+<section class="section">
+  <div class="container">
+    <div class="tile is-ancestor">
+      <div class="tile">
+        <div class="tile is-parent">
+          <div class="tile is-child notification is-info">
+            <div class="box">
+              This is item 1.  The status is [[=state1]]
+            </div>
+            <a class="button is-success" href="[[=URL('toggle', 1, vars=dict(thumb='up'), signer=url_signer)]]"><i class="fa fa-thumbs-up"></i></a>
+            <a class="button is-danger"  href="[[=URL('toggle', 1, vars=dict(thumb='down'), signer=url_signer)]]"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+        </div>
+        <div class="tile is-parent">
+          <div class="tile is-child notification is-info">
+            <div class="box">
+              This is item 2.  The status is [[=state2]]
+            </div>
+            <a class="button is-success" href="[[=URL('toggle', 2, vars=dict(thumb='up'), signer=url_signer)]]"><i class="fa fa-thumbs-up"></i></a>
+            <a class="button is-danger"  href="[[=URL('toggle', 2, vars=dict(thumb='down'), signer=url_signer)]]"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="tile is-ancestor">
+      <div class="tile">
+        <div class="tile is-parent">
+          <div class="tile is-child notification is-info">
+            <div class="box">
+              Current counter 1 is <b class="has-text-info">[[=counter1]]</b>
+            </div>
+            <a class="button is-success" href="[[=URL('count', 'counter1', vars=dict(arrow='up'), signer=url_signer)]]"><i class="fa fa-arrow-up"></i></a>
+            <a class="button is-warning" href="[[=URL('count', 'counter1', vars=dict(arrow='down'), signer=url_signer)]]"><i class="fa fa-arrow-down"></i></a>
+            <a class="button is-danger" href="[[=URL('count', 'counter1', vars=dict(arrow='reset'), signer=url_signer)]]"><i class="fa fa-times-circle"></i></a>
+          </div>
+        </div>
+        <div class="tile is-parent">
+          <div class="tile is-child notification is-info">
+            <div class="box">
+              Current counter 2 is <b class="has-text-info">[[=counter2]]</b>
+            </div>
+            <a class="button is-success" href="[[=URL('count', 'counter2', vars=dict(arrow='up'), signer=url_signer)]]"><i class="fa fa-arrow-up"></i></a>
+            <a class="button is-warning" href="[[=URL('count', 'counter2', vars=dict(arrow='down'), signer=url_signer)]]"><i class="fa fa-arrow-down"></i></a>
+            <a class="button is-danger" href="[[=URL('count', 'counter2', vars=dict(arrow='reset'), signer=url_signer)]]"><i class="fa fa-times-circle"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

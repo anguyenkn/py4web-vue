@@ -1,0 +1,64 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+  <section class="section" v-if="page=='add'">
+    <div class="container">
+      <div class="title">Add Contact</div>
+      <div class="form">
+        <!-- This looks like a form, but is not.  We just need the inputs. -->
+        <div class="field">
+          <label class="label">First Name:</label>
+          <div class="control">
+            <input type="text" @input="check_first_name" v-model="add_first_name" class="input">
+            <p v-if="first_name_empty" class="has-text-danger">Please enter a non-blank value</p>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Last Name:</label>
+          <div class="control">
+            <input type="text" @input="check_last_name" v-model="add_last_name" class="input">
+            <p v-if="last_name_empty" class="has-text-danger">Please enter a non-blank value</p>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <input type="submit" @click="add_person" value="Add" class="button is-primary">
+            <input type="submit" @click="goto('list')" value="Cancel" class="button is-warning">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" v-if="page=='list'">
+    <div class="container">
+      <h1 class="title">People</h1>
+      <table class="table is-striped is-fullwidth">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th></th>
+        </tr>
+        <tr v-for="r in rows">
+          <td>{{r.first_name}}</td>
+          <td>{{r.last_name}}</td>
+          <td><button @click="delete_person(r._idx)" class="button is-danger">
+            <i class="fa fa-trash"></i></button></td>
+        </tr>
+      </table>
+      <button @click="goto('add')" class="button is-primary">
+        <i class="fa fa-plus fa-fw"></i> Add Person
+      </button>
+    </div>
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let load_rows_url = "[[=XML(load_rows_url)]]";
+  let add_person_url = "[[=XML(add_person_url)]]";
+  let delete_person_url = "[[=XML(delete_person_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

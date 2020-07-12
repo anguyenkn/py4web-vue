@@ -1,0 +1,36 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div v-for="img in images" class="column">
+          <div class="box">
+            <div><img v-bind:src="img.image_url"></div>
+            <div>
+              <!-- This is the code for the star rating -->
+              <span @mouseout="stars_out(img._idx)">
+                <span @mouseover="stars_over(img._idx, star_idx)"
+                      @click="set_stars(img._idx, star_idx)"
+                      v-for="star_idx in [1, 2, 3, 4, 5]">
+                  <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
+                  <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+    let get_images_url = "[[=XML(get_images_url)]]";
+    let get_rating_url = "[[=XML(get_rating_url)]]";
+    let set_rating_url = "[[=XML(set_rating_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

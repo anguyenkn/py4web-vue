@@ -1,0 +1,190 @@
+timestamp: 2020-04-26T16:10:25.313602
+CREATE TABLE "py4web_session"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "rkey" CHAR(512),
+    "rvalue" TEXT,
+    "expiration" INTEGER,
+    "created_on" TIMESTAMP,
+    "expires_on" TIMESTAMP
+);
+success!
+timestamp: 2020-04-26T16:10:25.337408
+CREATE TABLE "auth_user"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "email" CHAR(512) UNIQUE,
+    "password" CHAR(512),
+    "first_name" CHAR(512),
+    "last_name" CHAR(512),
+    "sso_id" CHAR(512),
+    "action_token" CHAR(512)
+);
+success!
+timestamp: 2020-04-26T16:10:25.356754
+CREATE TABLE "auth_user_tag_groups"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "path" CHAR(512),
+    "record_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-04-26T18:11:19.545742
+CREATE TABLE "contacts"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "first_name" CHAR(512),
+    "last_name" CHAR(512),
+    "user_email" CHAR(512)
+);
+success!
+timestamp: 2020-04-27T13:19:19.600785
+ALTER TABLE "contacts" ADD "first_namee" CHAR(512);
+success!
+success!
+timestamp: 2020-04-27T13:20:59.801927
+ALTER TABLE "contacts" ADD "firstName" CHAR(512);
+success!
+timestamp: 2020-04-27T13:21:28.900296
+ALTER TABLE "contacts" ADD "bio" CHAR(512);
+success!
+timestamp: 2020-04-27T13:24:43.832517
+ALTER TABLE "contacts" ADD "user_id" CHAR(512);
+timestamp: 2020-04-27T13:24:43.863966
+ALTER TABLE "contacts" ADD "image" CHAR(512);
+timestamp: 2020-04-27T13:24:43.886882
+ALTER TABLE "contacts" ADD "genres" TEXT;
+success!
+success!
+success!
+timestamp: 2020-04-27T13:35:01.080083
+ALTER TABLE "contacts" ADD "profile_picture" CHAR(512);
+success!
+success!
+timestamp: 2020-04-27T13:37:54.068842
+ALTER TABLE "contacts" ADD "describe_yourself" TEXT;
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!

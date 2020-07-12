@@ -1,0 +1,25 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div v-for="img in images" class="column">
+          <div class="box">
+              <img v-bind:src="img.url">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">{{done}}</div>
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+    let callback_url = "[[=XML(callback_url)]]";
+    let getimage_url = "[[=XML(getimage_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

@@ -1,0 +1,38 @@
+[[extend 'layout.html']]
+
+<section class="section">
+    <div class="title">Phone Numbers for [[=row.first_name]] [[=row.last_name]] [[pass]]</div>
+    <table class="table is-striped is-fullwidth">
+        <tbody>
+            <tr>
+                <th>Phone</th>
+                <th>Kind</th>
+                <th></th>
+            </tr>
+            [[for number in numbers:]]
+            <tr>
+                <td>[[=number.phone]]</td>
+                <td>[[=number.type]]</td>
+                <td>
+                    <a href="[[=URL('edit_phone',row.id,number.id)]]" class="button is-warning">
+                        <i class="fa fa-fw fa-edit"></i>
+                    </a>
+                    <a href="[[=URL('delete_phone',number.id,signer=url_signer)]]" class="button is-danger">
+                        <i class="fa fa-fw fa-trash"></i>
+                      </a>
+                </td>
+            </tr>
+            [[pass]]
+        </tbody>
+    </table>
+    <a class="button is-success" href="[[=URL('index')]]">
+        <i class="fa fa-fw fa-backward">
+
+        </i>
+        Back
+    </a>
+    <a class="button is-primary" href="[[=URL('add_phone',row.id)]]">
+        <i class="fa fa-w fa-plus"></i>
+        Add Phone Number
+    </a>
+</section>

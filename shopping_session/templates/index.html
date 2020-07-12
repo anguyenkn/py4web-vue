@@ -1,0 +1,64 @@
+[[extend 'layout.html']]
+
+<section class="section">
+  <div class="container">
+    <div class="title">Welcome To the CSE183 Emporium!</div>
+    <div class="subtitle">Enjoy the shopping spree!</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="title">Our Products</div>
+    <div class="tile is-vertical is-ancestor">
+      [[for pl in products:]]
+      <div class="tile">
+        [[for p in pl:]]
+        <div class="tile is-parent">
+          <div class="tile is-child notification is-info">
+            <div class="box">
+              <div class="image is-square">
+                <img src="[[=URL('static', 'images/' + p['file'])]]">
+              </div>
+              <div class="has-text-weight-bold">[[=p['name'] ]]</div>
+            </div>
+            <a class="button is-success" href="[[=URL('buy', p['id'], signer=url_signer)]]">
+              <i class="fa fa-shopping-cart fa-fw"></i> Buy</a>
+          </div>
+        </div>
+        [[pass]]
+      </div>
+      [[pass]]
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container">
+    <div class="title">Your Cart</div>
+    <!-- Here include code to display the shopping cart -->
+    <div class="tile is-vertical is-ancestor">
+      [[idx = 0]]
+      [[for pl in cart:]]
+      <div class="tile">
+        [[for p in pl:]]
+        <div class="tile is-parent is-4">
+          <div class="tile is-child notification is-success">
+            <div class="box">
+              <div class="image is-square">
+                <img src="[[=URL('static', 'images/' + p['file'])]]">
+              </div>
+              <div class="has-text-weight-bold">[[=p['name'] ]]</div>
+            </div>
+            <a class="button is-danger" href="[[=URL('remove', idx, signer=url_signer)]]">
+              <i class="fa fa-shopping-cart fa-fw"></i> Remove</a>
+          </div>
+        </div>
+        [[idx += 1]]
+        [[pass]]
+      </div>
+      [[pass]]
+    </div>
+  </div>
+</section>

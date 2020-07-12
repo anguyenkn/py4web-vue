@@ -1,0 +1,210 @@
+body {
+  font-family: Muli;
+}
+
+#vue-target.main-container {
+  display: flex;
+  justify-content: center;
+}
+
+input {
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: Muli;
+}
+
+textarea {
+  resize: none;
+  width:100%;
+  font-size: 1.0rem;
+  border-color: rgba(0,0,0,0.20);
+  border-radius: 4px;
+  padding: 3px;
+  overflow: auto;
+  margin-bottom: 5px;
+  font-family: Muli;
+}
+
+.new-note-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.note-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 75%;
+}
+
+.new-note {
+  font-size: 1rem;
+  width: 100%;
+}
+
+.notes-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.note {
+  padding: 0px;
+  border-radius: 15px 15px 15px 15px;
+  margin: 10px;
+  min-width: 250px;
+  max-width: 250px;
+  flex: 0 0 20%;
+}
+
+.note:hover {
+  box-shadow: 0px 0px 20px 0px black;
+}
+
+.note-heading {
+  padding: 1.25rem;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.note-heading .title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white !important;
+}
+
+.new-note-container .title {
+  color: black !important;
+}
+
+.note-body {
+  padding: 1.25rem;
+}
+
+.bot-buttons-container {
+  display: flex;
+  justify-content: center;
+}
+
+i.color-icon {
+  font-size: 22px !important;
+  transition: 0.2s;
+}
+
+.color-icon:hover {
+  text-shadow: 0px 0px 10px black;
+}
+
+.note-star {
+  float: right;
+  color: white;
+  text-shadow: 0px 0px 10px black;
+  font-size: 22px !important;
+  position: absolute;
+  left: 220px;
+  top: 16px;
+  transition: 0.1s;
+}
+
+.note-star:hover {
+  font-size: 24px !important;
+  text-shadow: 0px 0px 20px white;
+}
+
+.dark-note {
+  background-color: #363636;
+}
+
+.red-note {
+  background-color: #f41541;
+  ;
+}
+
+.yellow-note {
+  background-color: #ff9900;
+}
+
+.green-note {
+  background-color: #00d1b2;
+}
+
+.blue-note {
+  background-color: #3273dc;
+}
+
+.purple-note {
+  background-color: #9900ff;
+}
+
+.welcome {
+  margin-bottom: 10px;
+}
+
+.section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.bottom-icon {
+  font-size: 22px !important;
+  transition: 0.2s;
+}
+
+.bottom-icon:hover {
+  text-shadow: 0px 0px 10px gray;
+}
+
+.hide {
+  display: none;
+}
+
+.input::-moz-placeholder,
+.textarea::-moz-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+.input::-webkit-input-placeholder,
+.textarea::-webkit-input-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+.input:-moz-placeholder,
+.textarea:-moz-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+.input:-ms-input-placeholder,
+.textarea:-ms-input-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+
+.hero-mono {
+  text-shadow: 0 0 80px #ffffff,0 0 30px #008000,0 0 6px #0000ff;
+  animation: upper 11s linear infinite;
+}
+
+.hero-pad {
+  text-shadow: 0 0 80px #ffffff,0 0 30px #008000,0 0 6px #0000ff;
+  animation: lower 10s linear infinite;
+}
+
+.hero-mono-2 {
+  text-shadow: 0 0 80px #ffffff,0 0 30px #008000,0 0 6px #0000ff;
+  animation: upper 5s linear infinite;
+}
+
+/* Animation idea and recourses for keyframes: https://css-tricks.com/css-animation-tricks/ */
+@keyframes upper {
+  0%,19.999%,22%,62.999%,64%, 64.999%,70%,100% {
+    opacity:.99; text-shadow: 0 0 80px #267871,0 0 30px black,0 0 6px black;
+  }
+  20%,21.999%,63%,63.999%,65%,69.999% {
+    opacity:0.4; text-shadow: none; 
+  }
+}
+@keyframes lower {
+  0%,12%,18.999%,23%,31.999%,37%,44.999%,46%,49.999%,51%,58.999%,61%,68.999%,71%,85.999%,96%,100% {
+    opacity:0.99; text-shadow: 0 0 80px black,0 0 30px #267871,0 0 6px black;
+  }
+  19%,22.99%,32%,36.999%,45%,45.999%,50%,50.99%,59%,60.999%,69%,70.999%,86%,95.999% { 
+    opacity:0.4; text-shadow: none; 
+  }
+}

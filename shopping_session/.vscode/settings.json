@@ -1,0 +1,15 @@
+{
+  "liveServer.settings.https": {
+  
+  },
+  "saveAndRun": {
+    "commands": [
+      {
+        "match": ".*",
+        "cmd": "python ~/Documents/Developer/cse183/py4web/py4web-start.py ~/Documents/Developer/cse183/py4web/apps/",
+        "useShortcut": false,
+        "silent": false
+      }
+    ]
+  }
+}

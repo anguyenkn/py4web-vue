@@ -1,0 +1,44 @@
+[[extend 'layout.html']]
+
+[[block page_menu_items]]
+<a class="navbar-item" href="[[=URL('add_contact')]]">Add Contact</a>
+[[end]]
+
+<section class="section">
+  <div class="title">Your Address Book</div>
+  <table class="table is-striped is-fullwidth">
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th></th>
+      <th>Phone Numbers</th>
+      <th></th>
+    </tr>
+    [[ind = 0]]
+    [[for row in rows:]]
+    <tr>
+      <td>[[=row.first_name]]</td>
+      <td>[[=row.last_name]]</td>
+      <td>
+        <a class="button has-background-warning" href="[[=URL('edit_contact', row.id)]]">
+          <i class="fa fa-edit" aria-hidden="true"></i>
+        </a>
+        <a class="button has-background-danger" href="[[=URL('delete_contact', row.id, signer=url_signer)]]">
+            <i class="fa fa-trash"></i>
+        </a>
+      </td>
+      <td>
+        [[=(rowNumbers[ind])]]
+        [[ind+=1]]
+      </td>
+      <td>
+        <a class="button has-background-warning" href="[[=URL('edit_phones', row.id)]]">
+          <i class="fa fa-edit" aria-hidden="true"></i>
+        </a>
+      </td>
+    </tr>
+    [[pass]]
+  </table>
+  <a class="button is-primary" href="[[=URL('add_contact')]]">Add Contact</a>
+</section>
+

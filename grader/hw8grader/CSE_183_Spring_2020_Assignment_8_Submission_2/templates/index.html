@@ -1,0 +1,120 @@
+[[extend 'layout.html']]
+<link rel="stylesheet" href="css/elements.css">
+
+<div id="vue-target">
+
+
+  <section class="section">
+    <!-- This is used to add a post. --->
+    <div class="level">
+      <div class="level-left">
+        <button @click="add_post" class="button is-danger">
+          <span class="icon"><i class="fa fa-plus"></i></span>
+            </button>
+
+      </div>
+    </div>
+  </section>
+  
+    <!-- This displays the posts -->
+    <!-- <div class="container"> -->
+    <section class="section">
+    <div v-for="post in posts">
+	<!-- <table class="table is-fullwidth"> -->
+	<!-- <div align="center" class="float-left"> -->
+	<div  class="float-left">
+	
+
+	
+
+	  
+	        <!-- <div class="box" :class="post.background_color" @click="do_edit(post.id)" > -->
+	        <div class="box radius-large" :class="post.background_color" >
+			 <!-- <div v-if="!post.edit" @click="do_edit(post.id)">{{post.content}}</div> -->
+
+
+			<input id="file_input" class="file" type="file" v-on:change="upload_file($event, post.id)">
+		
+			
+
+
+	    
+				<div v-if="post.rating == 1"  v-on:click="set_stars(post.id,0)" class="fa fa-star is-pulled-right"></div>
+				<div v-if="post.rating == 0" v-on:click="set_stars(post.id, 1)" class="fa fa-star-o is-pulled-right"></div>
+				
+				
+
+                <textarea v-if="post.edit" v-model="post.title" placeholder="Please enter Title" class="textarea has-text-weight-bold" rows="1" >  </textarea>
+				
+ 				<textarea v-if="!post.edit" readonly @click="do_edit(post.id)" v-model="post.title" placeholder="Please enter Title" class="textarea has-text-weight-bold" rows="1" :class="post.background_color">  </textarea>	
+				
+				<textarea v-if="post.edit" v-model="post.content" placeholder="Please enter Content" class="textarea  "  >  </textarea>				
+				<textarea v-if="!post.edit" readonly @click="do_edit(post.id)" v-model="post.content" placeholder="Please enter Content" class="textarea  "  :class="post.background_color" >  </textarea>				
+
+
+				<div class="icon is-small has-background-blue-neel" @click="set_background(post.id,'has-background-blue-neel')" ><i class="fa fa-square-o "></i></div>
+				<div class="icon is-small has-background-yellow-neel" @click="set_background(post.id,'has-background-yellow-neel')" ><i class="fa fa-square-o "></i></div>
+				<div class="icon is-small has-background-peach-neel" @click="set_background(post.id,'has-background-peach-neel')" ><i class="fa fa-square-o "></i></div>
+				<div class="icon is-small has-background-purpel-neel" @click="set_background(post.id,'has-background-purpel-neel')" ><i class="fa fa-square-o "></i></div>
+				<div class="icon is-small has-background-pink-neel" @click="set_background(post.id,'has-background-pink-neel')" ><i class="fa fa-square-o "></i></div>
+				
+				
+				 <button @click="do_delete(post.id)" class="button button is-small is-danger is-pulled-right">
+				  <i class="fa fa-fw fa-trash"></i></button>   
+				  
+            <button v-if="!post.edit && post.editable" @click="do_edit(post.id)" class="is-primary button is-small is-warning is-pulled-right">
+            <i class="fa fa-edit fa-fw"></i></button>
+
+
+                <button v-if="post.edit" @click="do_cancel(post.id)" class="button  is-small is-danger is-pulled-right">
+						<i class="fa fa-close"></i></button>
+						
+				 <button v-if="post.edit" @click="do_save(post.id)" class="button is-small is-primary is-pulled-right" >
+					<i class="fa fa-check-square-o fa-fw"></i></button>		
+
+              
+
+					
+
+				  
+	
+
+            </div> 			  
+        
+
+		
+		</div>
+   <!-- </table>	 -->
+	  </div>
+
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+
+<!-- <script>
+
+ </script> -->
+
+<script>
+  let posts_url = "[[=XML(posts_url)]]";
+  let add_post_url = "[[=XML(add_post_url)]]"; 
+  let update_post_url = "[[=XML(update_post_url)]]";
+  let set_star_url = "[[=XML(set_star_url)]]";
+  let set_color_url = "[[=XML(set_color_url)]]";
+  let image_url = "[[=XML(image_url)]]";
+  let delete_url = "[[=XML(delete_url)]]";
+  let user_email = "[[=XML(user_email)]]";
+  let author_name = "[[=XML(author_name)]]";
+</script>
+
+<!-- We import the code for the starrater.  We need to import this just
+once for all components. -->
+<!-- <script src="components/thumbrater/thumbrater.js"></script> -->
+<!-- We need a Vue object to be able to attach components to it. -->
+
+
+<script src="js/index.js"></script>
+
+[[end]]

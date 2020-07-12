@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="[[=URL('static')]]/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAAQEAAAEAIAAwAAAAFgAAACgAAAABAAAAAgAAAAEAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAA=="/>
+    <link rel="stylesheet" href="css/bulma.css">
+    <link rel="stylesheet" href="css/elements.css">
+    <link rel="stylesheet" href="[[=URL('static', 'font-awesome-4.7.0/css/font-awesome.css')]]">
+    <link href="https://fonts.googleapis.com/css2?family=Muli:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    [[block page_head]]<!-- individual pages can customize header here -->[[end]]
+  </head>
+  <body >
+    <div class="" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,.5);">
+      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="[[=URL('index')]]">
+              <!-- <img src="images/icon.png"> -->
+              <i class="fa fa-sticky-note" style="font-size: 25px;"></i>
+          </a>
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="left-navbar"
+             onclick="this.classList.toggle('is-active');document.getElementById(this.dataset.target).classList.toggle('is-active');">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div id="left-navbar" class="navbar-menu has-background-dark" style="" style="display: flex; justify-content: center">
+          <div class="navbar-start">
+            [[block page_menu_items]]<!-- individual pages can add menu items here -->[[end]]
+          </div>
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons" style="display: flex; justify-content: center;">
+                [[if globals().get('user'):]]
+                <a class="button is-light" href="[[=URL('auth/logout')]]">Sign out</a>
+                [[else:]]
+                <a class="button is-light" href="[[=URL('auth/register')]]">Sign up</a>
+                <a class="button is-light" href="[[=URL('auth/login')]]">Sign in</a>
+                [[pass]]
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="title is-1 has-background-dark" style="padding: 40px; text-align: center; color: white; text-shadow: 0px 0px 20px black; box-shadow: 0px 10px 32px -2px black;">
+      <span class="hero-mono">M<span class="hero-pad">o</span>no</span><span class="hero-pad">p<span class="hero-mono-2">a</span>d</span>
+    </div>
+    
+    <!-- beginning of HTML inserted by extending template -->
+    [[include]]
+    <!-- end of HTML inserted by extending template -->
+    <footer class="footer has-background-white">
+      <div class="content has-text-centered">
+      </div>
+    </footer>
+  </body>
+  <script src="js/sugar.min.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/vue.js"></script>
+  <script src="js/utils.js"></script>
+  [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]
+</html>

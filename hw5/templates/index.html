@@ -1,0 +1,81 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+
+  <section class="section">
+    <div class="title">Postlandia</div>
+  </section>
+
+  <section class="section">
+    <div class="">
+      <div v-if="show_add_field" class="is-fullwidth">
+        <div class="field">
+          <textarea class="textarea is-fullwidth" placeholder="Enter new post here" v-model="post_text"></textarea>
+        </div>
+        <p v-if="post_text_empty" class="has-text-danger">Please enter a non-blank value</p>
+        <button @input="check_post_text" @click="add_post" value="Post" class="button is-primary is-size-6">Post</button>
+        <button @click="cancel" class="button is-warning is-size-6">Cancel</button>
+      </div>
+      <div v-if="!show_add_field">
+        <button @click="toggle_add_field" class="button is-primary is-size-6">
+          <i class="fa fa-plus fa-fw"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical">
+        <!-- This div contains each post -->
+        <div v-for="post in posts" class="tile is-child notification is-light">
+          <div class="">
+            <div>{{post.post_text}}</div>
+            <div class="is-size-6 has-text-grey">{{post.author}}</div>
+          </div>
+          <div class="">
+            <div class="thumbs is-size-4">
+              <span v-if="user_email==post.user_email" @click="delete_post(post._idx)" class="has-text-danger is-pulled-right">
+                <i class="fa fa-trash fa-fw"></i>
+              </span>
+              <span @mouseenter="mouse_enter(post._idx)" @mouseleave="mouse_leave(post._idx)" class="has-text-info">
+                <span @click="set_rating(post.id, 1, post._idx)">
+                  <i v-if="post.rating == 1" class="fa fa-flip-horizontal fa-thumbs-up"></i>
+                  <i v-if="post.rating == -1 || post.rating == 0" class="fa fa-flip-horizontal fa-thumbs-o-up"></i>
+                </span>
+                <span @click="set_rating(post.id, -1, post._idx)">
+                  <i v-if="post.rating == -1" class="fa fa-thumbs-down"></i>
+                  <i v-if="post.rating == 1 || post.rating == 0" class="fa fa-thumbs-o-down"></i>
+                </span>
+              </span>
+              <span class="has-text-info">
+                <span v-if="post.show_likers" class="is-size-7">
+                  Liked by {{post.liker_string}}.
+                </span>
+                <span v-if="post.show_dislikers" class="is-size-7">
+                  Disliked by {{post.disliker_string}}.
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let get_posts_url = "[[=XML(get_posts_url)]]";
+  let add_post_url = "[[=XML(add_post_url)]]";
+  let delete_post_url = "[[=XML(delete_post_url)]]";
+  let set_rating_url = "[[=XML(set_rating_url)]]";
+  let get_rating_url = "[[=XML(get_ratign_url)]]";
+  let get_likers_url = "[[=XML(get_likers_url)]]"
+  // Complete with other URLs you need.
+  let user_email = "[[=XML(user_email)]]";
+  let username = "[[=XML(username)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

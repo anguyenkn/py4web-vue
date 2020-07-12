@@ -1,0 +1,66 @@
+/*.custom-footer {*/
+/*    margin-top: auto;*/
+/*}*/
+
+/*.buttons {*/
+/*    align-items: unset;*/
+/*}*/
+
+.level-left, .level-right {
+    flex-shrink: unset;
+}
+.level-left {
+    flex-grow: 1;
+}
+.input {
+    width: 90%;
+}
+
+/* why the fuck did I use bulma */
+.button.is-danger.is-outlined.is-focused, .button.is-danger.is-outlined.is-hovered, .button.is-danger.is-outlined:focus, .button.is-danger.is-outlined:hover {
+    background-color: #feecf0;
+    color: unset;
+    outline: none;
+    box-shadow: none;
+}
+
+.button.is-warning.is-outlined.is-focused, .button.is-warning.is-outlined.is-hovered, .button.is-warning.is-outlined:focus, .button.is-warning.is-outlined:hover {
+    background-color: #fffbeb;
+    color: unset;
+    outline: none;
+    box-shadow: none;
+}
+
+.button.is-success.is-outlined.is-focused, .button.is-success.is-outlined.is-hovered, .button.is-success.is-outlined:focus, .button.is-success.is-outlined:hover {
+    background-color: #effaf3;
+    color: unset;
+    outline: none;
+    box-shadow: none;
+}
+
+.button.is-primary.is-outlined.is-focused, .button.is-primary.is-outlined.is-hovered, .button.is-primary.is-outlined:focus, .button.is-primary.is-outlined:hover {
+    background-color: #ebfffc;
+    color: unset;
+    outline: none;
+    box-shadow: none;
+}
+
+.buttons.are-small .button:not(.is-normal):not(.is-medium):not(.is-large) {
+    border-radius: 2px;
+    font-size: .50rem;
+}
+
+.subtitle {
+    white-space: pre-wrap;
+}
+
+/* animations */
+.tile.is-parent{
+    transition:.3s all ease
+}
+.tile.is-parent:hover{
+    transform:scale(1.1);
+}
+.flip-list-move {
+  transition: transform 1s;
+}

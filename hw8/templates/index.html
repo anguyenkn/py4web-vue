@@ -1,0 +1,180 @@
+[[extend 'layout.html']]
+
+<div id="vue-target" class="main-container">
+  <section class="section" style="max-width: 900px;">
+
+    <div class="new-note-container">
+      <div class="box note note-wrapper">
+        <div v-if="!adding_note" @click="toggle_add_note" class="note-heading title is-5">Take a note...</div>
+        <div v-if="adding_note" class="note-heading dark-note" style="width: 100%">
+          <input type="text" class="new-note title" v-model="new_title">
+        </div>
+        <div v-if="adding_note" class="note-body">
+          <textarea class="new-note" style="height: 120px" v-model="new_content"></textarea>
+          <div v-if="adding_note"  class="" style="display: flex;">
+            <!-- Save button -->
+            <div class="level-item">
+              <button @click="add_note" class="button is-primary">
+              <i class="fa fa-check-square-o fa-fw"></i></button>
+            </div>
+            <!-- Cancel edit button -->
+            <div class="level-item" style="margin-left:10px"> 
+              <button @click="cancel_new_note" class="button is-danger">
+              <i class="fa fa-close"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-mobile notes-container">
+      <div v-for="note in notes">
+
+          <div class="box note" @mouseenter="mouse_enter_handler(note.idx)" @mouseleave="mouse_out_handler(note.idx)">
+            <div class="note-heading" :class="[note.color+'-note']" style="width: 100%; position: relative;">
+              <i @click="toggle_star(note.idx)" v-if="!note.star && !note.edit" class="fa fa-star-o note-star fa-1.2x"></i>
+              <i @click="toggle_star(note.idx)" v-if="note.star && !note.edit" class="fa fa-star note-star fa-1.2x"></i>
+              <div @click="do_edit(note.idx)" v-if="!note.edit" class="title is-5">{{note.title}}</div>
+              <input type="text" v-if="note.edit" v-model="note.title" class="">
+            </div>
+            <div v-if="note.image_url !== null" style="width: 100%;"><img style="width: 100%; height: 150px" :src="note.image_url"></div>
+            <div class="note-body">
+              <textarea v-if="!note.editing_sharing" @focus="do_edit(note.idx)" v-model="note.content" class=" " :class="note.content === note.server_content ? 'is-link' : 'is-danger'" style="height: 120px;">
+              </textarea>
+              <!-- Images -->
+              <div v-if="note.editing_image" class="" style="font-size: .7rem; padding-bottom: 0px;">
+                <input id="file_input" class="file" type="file" @change="upload_file($event, note.idx)" style="width:100%">
+                <button @click="remove_image(note.idx)" style="padding: 3px 7px; margin-top:5px; font-size: 1.1rem;">Remove Image</button>
+                <div style="padding-top: 3px; text-align: right;"><i @click="toggle_image_edit(note.idx)" class="fa fa-window-close has-text-danger" style="font-size: 1.7rem"></i></div>
+              </div>
+              <!-- Sharing -->
+              <div v-if="note.editing_sharing" class="" style="">
+                <div>Edit user emails to share with:</div>
+                <div class="">Add "<b>everyone</b>" to share with all users.</div>
+                <div class=""><b>Owner: </b>{{note.author}} ({{note.email}})</div>
+                <textarea v-model="note.shared_email" style="height: 80px;"></textarea>
+                <div style="padding-top: 3px;">
+                  <button @click="save_shared_people(note.idx)" class="button is-primary"><i class="fa fa-check-square-o fa-fw"></i></button>
+                  <button @click="toggle_share_edit(note.idx)" class="button is-danger"><i class="fa fa-close"></i></button>
+                </div>
+              </div>
+
+              <div v-if="note.edit"  class="level is-mobile" style="margin-bottom: 0px;">
+                <div class="level-right">
+                  <!-- Save button -->
+                  <div class="level-item">
+                    <button @click="do_save(note.idx)" class="button is-primary">
+                    <i class="fa fa-check-square-o fa-fw"></i></button>
+                  </div>
+                  <!-- Cancel edit button -->
+                  <div v-if="note.edit" class="level-item"> 
+                    <button @click="do_cancel(note.idx)" class="button is-danger">
+                  <i class="fa fa-close"></i></button>
+                  </div>
+                </div>
+              </div>
+  
+              <div v-if="!note.edit && !note.editing_image && !note.editing_sharing" class="level is-mobile bot-buttons-container" style="margin-bottom: 8px;">
+                <div class="level" style="width: 100%;">
+                  <div v-if="!note.edit" class="level-item" style="position: relative; display: flex; justify-content: space-between;">
+                    <!-- Edit Image -->
+                    <div v-if="note.display_buttons"class="">
+                      <i @click="toggle_image_edit(note.idx)" class="fa fa-image bottom-icon"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="">
+                      <i @click="do_edit(note.idx)" class="fa fa-image bottom-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Sharing Button -->
+                    <div v-if="note.display_buttons" class="">
+                      <i @click="toggle_share_edit(note.idx)" class="fa fa-user-plus bottom-icon"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="">
+                      <i class="fa fa-user-plus bottom-icon" style="color: darkgray"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="!note.edit && !note.editing_image && !note.editing_sharing" class="level is-mobile bot-buttons-container" style="margin-bottom: 0px;">
+                <div class="level" style="width: 100%;">
+                  <div class="level-item" style="position: relative;">
+                    <!-- Edit note button -->
+                    <div v-if="note.display_buttons"class="level-item">
+                      <i @click="do_edit(note.idx)" class="fa fa-pencil bottom-icon"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i @click="do_edit(note.idx)" class="fa fa-pencil bottom-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Dark -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="set_color(note.idx, 'dark')" class="fa fa-tint color-icon" style="color: #363636"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i class="fa fa-tint color-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Red -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="set_color(note.idx, 'red')" class="fa fa-tint color-icon" style="color: #f41541"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i class="fa fa-tint color-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Yellow -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="set_color(note.idx, 'yellow')" class="fa fa-tint color-icon" style="color: #ff9900"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i class="fa fa-tint color-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Green -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="set_color(note.idx, 'green')" class="fa fa-tint color-icon" style="color: #00d1b2"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i class="fa fa-tint color-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Blue -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="set_color(note.idx, 'blue')" class="fa fa-tint color-icon" style="color: #3273dc"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i class="fa fa-tint color-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Purple -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="set_color(note.idx, 'purple')" class="fa fa-tint color-icon" style="color: #9900ff"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i class="fa fa-tint color-icon" style="color: darkgray"></i>
+                    </div>
+                    <!-- Delete note button -->
+                    <div v-if="note.display_buttons" class="level-item">
+                      <i @click="do_delete(note.idx)" class="fa fa-trash bottom-icon"></i>
+                    </div>
+                    <div v-if="!note.display_buttons" class="level-item">
+                      <i @click="do_delete(note.idx)" class="fa fa-trash bottom-icon" style="color: darkgray"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <nav class="level is-mobile"></nav>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let upload_url = "[[=XML(upload_url)]]";
+  let notes_url = "[[=XML(notes_url)]]";
+  let delete_url = "[[=XML(delete_url)]]";
+  let color_url = "[[=XML(color_url)]]";
+  let user_email = "[[=XML(user_email)]]";
+  let author_name = "[[=XML(author_name)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

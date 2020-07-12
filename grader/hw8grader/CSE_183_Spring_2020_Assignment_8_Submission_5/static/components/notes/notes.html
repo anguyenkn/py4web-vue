@@ -1,0 +1,57 @@
+<div>
+    <button @click="create" class="button is-rounded is-danger">
+        <i class="fa fa-plus"></i>
+    </button>
+
+    <div class="columns is-multiline notes-container">
+        <div v-for="note in notes" :class="color_class(note.color)" class="column is-3 note"  >
+            <div v-if="!note.edit" @click="toggle_edit(true, note._idx)">
+                <div class="level">
+                    <div class="level-left">
+                        <p class="level-item title is-5">
+                            {{note.title}}
+                        </p> 
+                    </div>
+                    <div class="level-right">
+                        <i class="fa fa-star" :class="note.has_star ? 'starred': '' "></i>
+                    </div>
+                </div>
+                
+                <span class="note-content">
+                    {{format_note_text(note.content, note._idx)}}
+                </span>
+            </div>
+            <div v-if="note.edit">
+                <div class="level">
+                    <div class="level-left">
+                        <input class="input" type="text" v-model="note.title"
+                            v-on:keyup="edit_key(note._idx, 'title', note.title)">
+                    </div>
+                    <div class="level-right">
+                        <i style="cursor: pointer" class="fa fa-star" :class="note.has_star ? 'starred': '' "
+                           @click="edit_key(note._idx, 'has_star', !note.has_star)"></i>
+                    </div>
+                </div>
+                
+                <div class="list-switch field">
+                    <input @change="edit_key(note._idx, 'is_list', note.is_list)" id="is-list" type="checkbox" checked="note.is_list" v-model="note.is_list">
+                    <label for="is-list">Bullet Points</label>
+                </div>
+                <textarea class="textarea" v-on:keyup = "handle_note_change($event, note._idx)"
+                    :value="format_note_text(note.content, note._idx)"></textarea>
+                <div class="columns color-pallete">
+                    <div v-for="(color, index) in colors" class="column color-block" :class="color_class(index)"
+                        @click="edit_key(note._idx, 'color', index)">
+                    </div>
+                </div>
+                <br>
+                <div class="complete-wrap">
+                    <button class="is-danger button" @click = "remove(note._idx)">
+                        <i class="fa fa-fw fa-trash">  </i>
+                        Delete Note
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

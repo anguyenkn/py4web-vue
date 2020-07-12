@@ -1,0 +1,57 @@
+.notes-container {
+    justify-content: center;
+}
+
+.note {
+    min-height: 200px;
+    border: 1px solid black;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.note-content {
+    white-space: pre-line;
+}
+
+
+.list-switch {
+    margin: 10px auto;
+}
+
+.starred {
+    color: yellow;
+}
+
+.pastel-red {
+    background-color: #e8c7c7;
+}
+
+.pastel-yellow {
+    background-color: #f7eccb;
+}
+
+.pastel-green {
+    background-color: #bdc8b7;
+}
+
+.pastel-blue {
+    background-color: #d3e1f1;
+}
+
+.pastel-purple {
+    background-color: #e6d2db;
+}
+
+.color-pallete {
+    width: 80%;
+    margin: auto;
+    margin-top: 40px;
+}
+
+.color-block {
+    margin: 10px;
+    max-width: 20px;
+    max-height: 20px;
+    border: 1px solid gray;
+    cursor: pointer;
+}

@@ -1,0 +1,22 @@
+[[extend 'layout.html']]
+
+<div id="vue">
+  <section class="section">
+    <div class="container">
+      [[=handler]]
+    </div>
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- We import the code for the notes.  We need to import this just
+once for all components. -->
+<script src="components/notes/notes.js"></script>
+<!-- We need a Vue object to be able to attach components to it. -->
+<script>
+  var app = new Vue({
+      el: "#vue",
+      data: {},
+  });
+</script>
+[[end]]

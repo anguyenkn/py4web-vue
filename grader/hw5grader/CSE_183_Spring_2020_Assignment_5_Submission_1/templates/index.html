@@ -1,0 +1,108 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+
+  <section class="section">
+    <div class="title">Postlandia</div>
+  </section>
+
+  <section class="section">
+    <div v-if="show_add_post_form">
+        <div class="is-fullwidth">
+            <div class="field">
+                <textarea class="textarea is-fullwidth" v-model="post_text"
+                            placeholder="Enter new post here"></textarea>
+                <p class="has-text-danger" v-if="text_empty">Post must contain text.</p>
+            </div>
+            <button class="button is-primary is-size-6" @click="make_post">Post</button>
+            <button class="button is-warning is-size-6" @click="hide_post_form">Cancel</button>
+        </div>
+    </div>
+    <br>
+    <div v-if="!show_add_post_form">
+        <button class="button is-primary is-size-6" @click="add_post_form">
+            <i class="fa fa-plus fa-fw"></i>
+        </button>
+    </div>
+  </section>
+
+  <section class="section">
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical">
+                <div class="tile is-child notification is-light" v-for="p in posts">
+                    <div>
+                        <div>{{p.post_text}}</div>
+                        <div class="is-size-6 has-text-grey">{{p.user_first_name}} {{p.user_last_name}}</div>
+                    </div>
+                    <div class="">
+                        <div class="thumbs is-size-4">
+                            <span class="has-text-danger is-pulled-right" 
+                                    @click="delete_post(p._idx)"
+                                    v-if="p.user_email=='[[=user_email]]'">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                            <span class="has-text-info" @mouseout="thumb_out(p._idx)">
+                                <span @mouseover="thumb_up_over(p._idx)" @click="set_thumb(p._idx, 'up')">
+                                    <i class="fa fa-flip-horizontal fa-thumbs-up" 
+                                            v-if="p.thumb_up"></i>
+                                    <i class="fa fa-flip-horizontal fa-thumbs-o-up"
+                                            v-if="!p.thumb_up"></i>
+                                </span>
+                                
+                                <span @mouseover="thumb_down_over(p._idx)"  @click="set_thumb(p._idx, 'down')">
+                                    <i class="fa fa-thumbs-down"  
+                                            v-if="p.thumb_down"></i>
+                                    <i class="fa fa-thumbs-o-down"
+                                            v-if="!p.thumb_down"></i>
+                                </span>
+                            </span>
+                            <span class="has-text-info">
+                                <span class="is-size-7"
+                                        v-if="p.like_hover && p.liked_by.length > 0">
+                                    Liked by 
+                                        <span v-for="rater in p.liked_by">
+                                            {{rater}} 
+                                            <span v-if="p.liked_by.indexOf(rater) < p.liked_by.length-1"> and</span>
+                                        </span>
+                                </span>
+                                <span class="is-size-7" v-else-if="p.like_hover">
+                                    Be the first to like this post!
+                                </span>
+                                <span class="is-size-7"
+                                        v-if="p.dislike_hover && p.disliked_by.length > 0">
+                                    Disiked by 
+                                        <span v-for="rater of p.disliked_by">
+                                            {{rater}} 
+                                            <span v-if="p.disliked_by.indexOf(rater) < p.disliked_by.length-1"> and</span>
+                                        </span>
+                                </span>
+                                <span class="is-size-7" v-else-if="p.dislike_hover">
+                                    Be the first to dislike this post!
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let get_posts_url = "[[=XML(get_posts_url)]]";
+  // Complete with other URLs you need.
+  let user_email = "[[=XML(user_email)]]";
+  let user_first_name = "[[=XML(user_first_name)]]";
+  let user_last_name = "[[=XML(user_last_name)]]";
+  let username = "[[=XML(username)]]";
+  let add_post_url = "[[=XML(add_post_url)]]";
+  let delete_post_url = "[[=XML(delete_post_url)]]";
+  let get_rating_url = "[[=XML(get_rating_url)]]";
+  let set_rating_url = "[[=XML(set_rating_url)]]";
+  let get_post_ratings_url = "[[=XML(get_post_ratings_url)]]";
+  let get_first_last_name_url = "[[=XML(get_first_last_name_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

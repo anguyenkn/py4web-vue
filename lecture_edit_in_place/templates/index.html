@@ -1,0 +1,42 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+  <section class="section">
+    <div class="title">Post-O-Matic</div>
+    <div class="post">
+      <div class="level">
+        <textarea v-model="abstract" class="textarea" :readonly="!edit"
+                  @focus="do_edit"
+                  :class="!edit ? 'is-light' : (abstract === server_abstract ? 'is-link' : 'is-danger')"
+        ></textarea>
+      </div>
+      <nav class="level is-mobile">
+        <div class="level-left">
+          <div v-if="!edit" class="level-item">
+            <button @click="do_edit" class="button is-warning">
+            <i class="fa fa-edit fa-fw"></i></button></div>
+          <div v-if="edit" class="level-item">
+            <button @click="do_save" class="button is-primary"
+            :class="is_pending ? 'is-loading' : ''">
+            <i class="fa fa-check-square-o fa-fw"></i></button></div>
+          <div v-if="error" class="level-item has-text-danger">
+            <i class="fa fa-exclamation-triangle"></i></div>
+        </div>
+        <div class="level-right">
+          <div v-if="edit && !is_pending && !error" class="level-item">
+            <button @click="do_cancel" class="button is-danger">
+            <i class="fa fa-close"></i></button></div>
+        </div>
+      </nav>
+    </div>
+
+  </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let callback_url = "[[=XML(callback_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

@@ -1,0 +1,6 @@
+*.pyc
+__pycache__/*
+databases/*
+!databases/README.md
+!translations/README.md
+

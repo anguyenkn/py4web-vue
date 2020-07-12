@@ -1,0 +1,33 @@
+[[extend 'layout.html']]
+
+<div id="vue-target">
+    <section class="section">
+        <div class="level">
+            <button @click="add_note" class="button is-white is-rounded">
+                <i class="fa fa-plus fa-lg"></i>
+            </button>
+        </div>
+        <div class="level">
+            <transition-group name="flip-list" tag="div" class="tile is-ancestor"
+                              leave-active-class="animate__animated animate__fadeOut animate__faster"
+                              style="flex-wrap: wrap; align-items: baseline;">
+                <div v-for="(note, index) of notes" :key="note.note_date" class="tile is-parent is-3">
+                    <note @new_note="note.id = $event"
+                          @note_pinned="insert_pinned(note, index)"
+                          @delete_note="delete_note(note.id, index, $event)" :note_object="note">
+                    </note>
+                </div>
+            </transition-group>
+        </div>
+    </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+    let notes_url = "[[=XML(notes_url)]]";
+    let delete_note_url = "[[=XML(delete_note_url)]]";
+</script>
+<script src="components/note/note.js"></script>
+<script src="js/index.js"></script>
+[[end]]

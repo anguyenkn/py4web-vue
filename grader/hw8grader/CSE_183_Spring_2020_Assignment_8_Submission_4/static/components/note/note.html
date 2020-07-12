@@ -1,0 +1,45 @@
+<article class="tile is-child notification box" :class="note_color">
+    <div class="level">
+        <div @click="edit_status = true" class="level-left">
+            <input v-if="edit_status" v-model="note_title" class="input is-medium" :class="note_color.split(' ')[0]"
+                   type="text" :placeholder="[note_title.trim().length === 0 ? 'Title' : '']">
+            <p v-else class="title is-4" style="padding: 11.5px 0px 11.5px 0px;">{{note_title}}</p>
+        </div>
+        <div class="level-right">
+            <button @click="star_click" class="button is-white is-small is-rounded" :class="note_color"
+                    style="padding: 1px 9px 1px 9px;">
+                <i v-if="is_pinned" class="fa fa-star"></i>
+                <i v-else class="fa fa-star-o"></i>
+            </button>
+        </div>
+    </div>
+    <div @click="edit_status = true" class="level">
+    <textarea v-if="edit_status" v-model="note_content" class="textarea" :class="note_color.split(' ')[0]"
+              :rows="note_content != null ? note_content.split(/\r\n|\r|\n/).length : 1"></textarea>
+        <div v-else-if="note_content.trim().length > 0 || note_title.trim().length > 0" class="subtitle" style="padding: 10px 0px 10px 0px;">{{note_content}}</div>
+        <div v-else class="subtitle has-text-grey" style="font-size: 2rem">Empty note</div>
+    </div>
+    <div class="level">
+        <div class="level-left">
+            <div class="buttons are-small is-pulled-right">
+                <button @click="change_color('is-primary is-light')"
+                        class="button is-primary is-light is-rounded is-outlined"></button>
+                <button @click="change_color('is-success is-light')"
+                        class="button is-success is-light is-rounded is-outlined"></button>
+                <button @click="change_color('is-warning is-light')"
+                        class="button is-warning is-light is-rounded is-outlined"></button>
+                <button @click="change_color('is-danger is-light')"
+                        class="button is-danger is-light is-rounded is-outlined"></button>
+            </div>
+        </div>
+        <div class="level-right">
+            <button v-if="edit_status" @click="save_note" class="button is-white is-small is-rounded"
+                    :class="note_color"
+                    style="padding: 1px 6px 1px 6px;">
+                <i class="fa fa-check fa-lg has-text-success"></i></button>
+            <button @click="delete_note" class="button is-white is-small is-rounded" :class="note_color"
+                    style="padding: 1px 9px 1px 9px;">
+                <i class="fa fa-trash fa-lg has-text-danger"></i></button>
+        </div>
+    </div>
+</article>

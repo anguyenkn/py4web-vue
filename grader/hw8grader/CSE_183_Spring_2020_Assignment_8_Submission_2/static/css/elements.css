@@ -1,0 +1,62 @@
+.welcome {
+    margin-bottom: 10px;
+}
+
+.section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.input::-moz-placeholder,
+.textarea::-moz-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+.input::-webkit-input-placeholder,
+.textarea::-webkit-input-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+.input:-moz-placeholder,
+.textarea:-moz-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+.input:-ms-input-placeholder,
+.textarea:-ms-input-placeholder {
+  color: rgba(54, 54, 54, 0.7);
+}
+
+.float-left {
+    float:left;
+    width:28%; //300px; // or 33% for equal width independent of parent width
+
+  margin-top: 1%;//3px;
+  margin-bottom: 1%;//
+  margin-right: 1%;//3px;
+  margin-left: 1%; //3px;
+
+}
+
+.has-background-blue-neel
+{
+  //background-color: #00d1b2 !important;
+  background-color: #ACE7FF !important;
+}
+
+.has-background-yellow-neel
+{
+  background-color: #FFFFD1 !important;
+}
+
+.has-background-peach-neel
+{
+  background-color: #FFBEBC !important;
+}
+
+.has-background-purpel-neel
+{
+  background-color: #D5AAFF !important;
+}
+
+.has-background-pink-neel
+{
+  background-color: #FFCCF9 !important;
+}

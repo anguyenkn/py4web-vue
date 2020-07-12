@@ -1,0 +1,12 @@
+<!-- TODO: complete -->
+<span>
+    <span>
+        <i v-if="thumbs_display == 1" v-on:click="set_thumbs(0)" class="fa fa-flip-horizontal fa-thumbs-up"></i>
+        <i v-else v-on:click="set_thumbs(1)" class="fa fa-flip-horizontal fa-thumbs-o-up"></i>
+    </span>
+    <span>
+        <i v-if="thumbs_display == -1" v-on:click="set_thumbs(0)" class="fa fa-thumbs-down"></i>
+        <i v-else v-on:click="set_thumbs(-1)" class="fa fa-thumbs-o-down"></i>
+    </span>
+</span>
+

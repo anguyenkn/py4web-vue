@@ -1,0 +1,805 @@
+[[extend 'layout.html']]
+
+<style>
+.note-red {
+    background-color: #FF9AA2
+}
+.note-orange {
+    background-color: #FFDAC1
+}
+.note-yellow {
+    background-color: #FFFFD8
+}
+.note-green {
+    background-color: #B5EAD7
+}
+.note-blue {
+    background-color: #E0FEFE
+}
+.note-purple {
+    background-color: #C7CEEA
+}
+</style>
+
+<div id="vue-target">
+    <section class="section">
+        <div class="">
+            <div class="is-fullwidth" v-if="textbox=='isShown'">
+                <div class="field">
+                    <textarea class="textarea is-fullwidth" placeholder="Enter new note title here" v-model="add_note_title"></textarea>
+                </div>
+                <div class="field">
+                    <textarea class="textarea is-fullwidth" placeholder="Enter new note text here" v-model="add_note_text"></textarea>
+                </div>
+                <button @click="add_note" value="Add" class="button is-primary is-size-6">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </button>
+                <button @click="textboxChange('notShown')" class="button is-warning is-size-6">
+                    <i class="fa fa-close"></i>
+                </button>
+            </div>
+            <div>
+                <button @click="textboxChange('isShown')" class="button is-primary is-size-6" v-if="textbox=='notShown'">
+                    <i class="fa fa-plus fa-fw"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="columns is-multiline is-mobile">
+            <div v-for="n in notes" v-if="n.star == 1" class="column is-one-third">
+                <div class="notification note-red" v-if="n.shade == 1">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-orange" v-if="n.shade == 2">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-yellow" v-if="n.shade == 3">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-green" v-if="n.shade == 4">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-blue" v-if="n.shade == 5">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-purple" v-if="n.shade == 6">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-for="n in notes" v-if="n.star == 0" class="column is-one-third">
+                <div class="notification note-red" v-if="n.shade == 1">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-orange" v-if="n.shade == 2">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-yellow" v-if="n.shade == 3">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-green" v-if="n.shade == 4">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-blue" v-if="n.shade == 5">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification note-purple" v-if="n.shade == 6">
+                    <div> 
+                        <i v-if="n.star == 1" @click = "set_star(n._idx, 0)" class="fa fa-star" aria-hidden="true"></i>
+                        <i v-if="n.star == 0" @click = "set_star(n._idx, 1)" class="fa fa-star-o" aria-hidden="true"></i>
+                    </div>
+                    <div v-if="!n.edit" class="has-text-weight-bold">{{n.note_title}}</div>
+                    <div v-if="!n.edit">{{n.note_text}}</div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_title"
+                            :class="n.note_title === n.server_note_title ? 'is-link' : 'is-danger'"
+                        ></textarea>
+                    </div>
+                    <div v-if="n.edit" class="field">
+                        <textarea class="textarea is-fullwidth" v-model="n.note_text">
+                            :class="n.note_text === n.server_note_text ? 'is-link' : 'is-danger'"
+                        </textarea>
+                    </div>
+                    <div>
+                        <div class="level-left">
+                            <div v-if="!n.edit" class="level-item">
+                                <button @click="do_edit(n._idx)" class="button is-warning">
+                                    <i class = "fa fa-edit fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit" class="level-item">
+                                <button @click="do_save(n._idx)" class="button is-primary"
+                                    :class="n.is_pending ? 'is-loading' : ''">
+                                        <i class="fa fa-check-square-o fa-fw"></i>
+                                </button>
+                            </div>
+                            <div v-if="n.edit && !n.is_pending && !n.error" class="level-item">
+                                <button @click="do_cancel(n._idx)" class="button is-danger">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </div>
+                            <span @click="delete_note(n._idx)" class="has-text-danger is-pulled-right" v-if="!n.edit">
+                                <i class="fa fa-trash fa-fw"></i>
+                            </span>
+                        </div>
+                        <div v-if="!n.edit" class="level-right">
+                            <button  @click = "set_color(n._idx, 1)" class="button is-small">
+                                <span class="icon is-small note-red"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 2)" class="button is-small">
+                                <span class="icon is-small note-orange"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 3)" class="button is-small">
+                                <span class="icon is-small note-yellow"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 4)" class="button is-small">
+                                <span class="icon is-small note-green"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 5)" class="button is-small">
+                                <span class="icon is-small note-blue"></span>
+                            </button>
+                            <button @click = "set_color(n._idx, 6)" class="button is-small">
+                                <span class="icon is-small note-purple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+    let delete_note_url = "[[=XML(delete_note_url)]]";
+    let user_email = "[[=XML(user_email)]]";
+    let get_shade_url = "[[=XML(get_shade_url)]]";
+    let set_shade_url = "[[=XML(set_shade_url)]]";
+    let get_star_url = "[[=XML(get_star_url)]]";
+    let set_star_url = "[[=XML(set_star_url)]]";
+    let save_note_url = "[[=XML(save_note_url)]]";
+    let add_note_url = "[[=XML(add_note_url)]]";
+    let get_notes_url = "[[=XML(get_notes_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]
